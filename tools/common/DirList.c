@@ -1,7 +1,7 @@
 /* DirList.c */
 
 #include	<sys/types.h>	/* DIR */
-#ifdef __GNUC__
+#if defined(__GNUC__) || defined(__LINUX__)
 #include	<dirent.h>		/* struct dirent, opendir, readdir, rewinddir, closedir */
 #else
 #include	<direct.h>		/* struct dirent, opendir, readdir, rewinddir, closedir */
@@ -32,6 +32,7 @@ DirList *list_dir(const File *file, const char *suffix)
 		file_error(file, "Could not open directory");
 
 	list = malloc(sizeof(DirList));
+	list->size = 0;
 
 	/* count number of files in directory */
 	while ((dir = readdir(dp)) != NULL)

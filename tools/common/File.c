@@ -8,12 +8,53 @@
 #include	<sys/stat.h>	/* stat, mkdir(gnu) */
 #include	<string.h>		/* strlen, strcpy */
 #include	<malloc.h>		/* malloc, free */
-#ifndef __GNUC__
+#if !defined(__GNUC__) && !defined(__LINUX__)
 #include	<direct.h>		/* mkdir */
 #endif
 
 #include	"gendefs.h"		/* general use defs */
 #include	"File.h"		/* file handling */
+
+#ifdef __LINUX__
+#include <dirent.h>
+#include <strings.h>
+
+/* DOS patch filenames may differ in case from files shipped by GOG. */
+static void resolve_filename(File *file)
+{
+	char *path, *slash, *base;
+	DIR *dir;
+
+	if (access(file->filename, F_OK) == 0)
+	{
+		return;
+	}
+
+	path = malloc(strlen(file->filename) + 1);
+	strcpy(path, file->filename);
+	slash = strrchr(path, '/');
+	base = slash == NULL ? file->filename : file->filename + (slash - path) + 1;
+
+	if (slash != NULL)
+	{
+		*slash = '\0';
+	}
+
+	dir = opendir(slash == NULL ? "." : (path[0] == '\0' ? "/" : path));
+	if (dir != NULL)
+	{
+		struct dirent *entry;
+		while ((entry = readdir(dir)) != NULL)
+			if (strcasecmp(base, entry->d_name) == 0)
+			{
+				strcpy(base, entry->d_name);
+				break;
+			}
+		closedir(dir);
+	}
+	free(path);
+}
+#endif
 
 
 /*
@@ -32,6 +73,10 @@ File *stat_file(const char *filename)
 	/* allocate space & copy filename */
 	file->filename = (char *) malloc(sizeof(char) * (strlen(filename) + 1));
 	strcpy(file->filename, filename);
+
+#ifdef __LINUX__
+	resolve_filename(file);
+#endif
 
 	/* initialize fp to null */
 	file->fp = NULL;
@@ -279,7 +324,7 @@ void truncate_file(File *file, long offset)
 
 void make_directory(const char *path)
 {
-#ifdef __GNUC__
+#if defined(__GNUC__) || defined(__LINUX__)
 	mkdir(path, 0775);
 #else
 	mkdir(path);
