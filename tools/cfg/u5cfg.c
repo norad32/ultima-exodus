@@ -7,7 +7,7 @@
 
 #include	"u5cfg.h"				/* defs for u5cfg program */
 #include	"gendefs.h"			/* general use defs */
-#include	"file.h"				/* file handling */
+#include	"File.h"				/* file handling */
 
 
 int main(int argc, const char *argv[])

@@ -3,7 +3,7 @@
 
 
 #include	"gendefs.h"
-#include	"file.h"
+#include	"File.h"
 #include	"cfg.h"
 
 
