@@ -3,12 +3,13 @@ DIRS = common cfg tlk binpatch
 PACKAGE_DIRS = cfg binpatch
 
 %: FORCE
-	# operate on both local and dos targets
+	# operate on local, dos, winnt and linux targets
 	for i in ${DIRS}; do \
 		if [ -d "$$i" ]; then \
 			TARGET=local make -C $$i $@ || exit 1; \
 			TARGET=dos make -C $$i $@ || exit 1; \
 			TARGET=winnt make -C $$i $@ || exit 1; \
+			TARGET=linux make -C $$i $@ || exit 1; \
 		fi \
 	done || exit 1
 
@@ -18,6 +19,7 @@ package%: FORCE
 		if [ -d "$$i" ]; then \
 			TARGET=dos make -C $$i $@ || exit 1; \
 			TARGET=winnt make -C $$i $@ || exit 1; \
+			TARGET=linux make -C $$i $@ || exit 1; \
 		fi \
 	done || exit 1
 

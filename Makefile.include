@@ -45,10 +45,18 @@ else
 	else ifeq (${TARGET},linux)
     	TARGET_ARCH := ${TARGET_ARCH_LINUX}
 
+        WATCOM_BIN=${WATCOM}/binnt
+        ifeq ($(shell uname -s),Linux)
+            export WATCOM=/opt/watcom
+            WATCOM_BIN=${WATCOM}/binl64
+            dospath = "$(strip ${1})"
+        endif
+        export WLINK_LNK=${WATCOM_BIN}/wlink.lnk
+
     	# compilation programs
-    	CC=${WATCOM}/binnt/wcc386 -q -i=$(call dospath,${WATCOM}/h) -i=. -i=$(call dospath,${COMMON}) -bt=linux -5 -dTARGET_ID=3
+        CC=${WATCOM_BIN}/wcc386 -q -i=$(call dospath,${WATCOM}/lh) -i=. -i=$(call dospath,${COMMON}) -bt=linux -5 -dTARGET_ID=3
     	AR=ar
-    	LD=${WATCOM}/binnt/wlink system linux option noextension
+        LD=${WATCOM_BIN}/wlink system linux option noextension
 
 		BINSUFFIX=l
 	else

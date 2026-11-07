@@ -9,6 +9,7 @@ Installation:
     1) Run the following program to patch the game, depending on your O/S:
         * Windows:  u2upw   (Can be launched directly from explorer)
         * DOS:      u2up
+        * Linux:    u2upl
     2) Edit dosbox.conf (dosboxULTIMA2.conf for GOG) and change these values:
         * cycles=10000   (or greater)
         * cputype=auto
@@ -21,6 +22,7 @@ Optional Steps:
     *) Run the following program to change the default configuration:
         * Windows:  u2cfgw   (Can be launched directly from explorer)
         * DOS:      u2cfg
+        * Linux:    u2cfgl
 
 ---
 
